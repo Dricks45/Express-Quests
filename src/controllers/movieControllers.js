@@ -7,7 +7,6 @@ const getMovies = (req, res) => {
       res.json(movies); // use res.json instead of console.log
     })
     .catch((err) => {
-      console.error(err);
       res.sendStatus(500);
     });
 };
@@ -25,7 +24,6 @@ const getMovieById = (req, res) => {
       }
     })
     .catch((err) => {
-      console.error(err);
       res.sendStatus(500);
     });
 };
@@ -42,13 +40,13 @@ const postMovie = (req, res) => {
       res.status(201).send({ id: result.insertId });
     })
     .catch((err) => {
-      console.error(err);
       res.sendStatus(500);
     });
 };
 
 const updateMovie = (req, res) => {
   const id = parseInt(req.params.id);
+  const { title, director, year, color, duration } = req.body;
 
   database
     .query(
@@ -63,7 +61,6 @@ const updateMovie = (req, res) => {
       }
     })
     .catch((err) => {
-      console.error(err);
       res.sendStatus(500);
     });
 };
