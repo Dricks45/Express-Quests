@@ -159,3 +159,41 @@ describe("PUT /api/movies/:id", () => {
     expect(response.status).toEqual(404);
   });
 });
+
+describe("DELETE /api/movies/:id", () => {
+  it("should delete the movie", async () => {
+    const newMovie = {
+      title: "Star Wars",
+      director: "George Lucas",
+      year: "1977",
+      color: true,
+      duration: 120,
+    };
+
+    const [resultInsert] = await database.query(
+      "INSERT INTO movies(title, director, year, color, duration) VALUES (?, ?, ?, ?, ?)",
+      [
+        newMovie.title,
+        newMovie.director,
+        newMovie.year,
+        newMovie.color,
+        newMovie.duration,
+      ]
+    );
+    const id = resultInsert.insertId;
+
+    const response = await request(app).delete(`/api/movies/${id}`);
+    expect(response.status).toEqual(204);
+
+    const [resultSelect] = await database.query(
+      "SELECT * FROM movies WHERE id=?",
+      id
+    );
+    expect(resultSelect.length).toBe(0);
+  });
+
+  it("should return error 404", async () => {
+    const response = await request(app).delete(`/api/movies/0`);
+    expect(response.status).toEqual(404);
+  });
+});
